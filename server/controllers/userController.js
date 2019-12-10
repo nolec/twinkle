@@ -2,6 +2,7 @@ import registerValidator from "../validator/registerValidator";
 import loginValidator from "../validator/loginValidator";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { serverError, resourceError } from "../utils/error";
 
 export const login = (req, res) => {
@@ -15,6 +16,27 @@ export const login = (req, res) => {
       if (!user) {
         resourceError(res, "유저를 찾을 수 없습니다.");
       }
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err) {
+          return serverError(res, err);
+        }
+        if (!result) {
+          return resourceError(res, "패스워드가 틀렸습니다.");
+        }
+        let token = jwt.sign(
+          {
+            _id: user._id,
+            name: user.name,
+            email: user.email
+          },
+          "secret",
+          { expiresIn: "2h" }
+        );
+        res.status(200).json({
+          message: "로그인 성공",
+          token: `Bearer ${token}`
+        });
+      });
     })
     .catch(error => serverError(res, error, ""));
 };
