@@ -59,55 +59,90 @@ const Password = styled.input``;
 const Email = styled.input``;
 const Submit = styled.input``;
 
-const RegisterPresenter = ({
-  validError,
-  handleSubmit,
-  handleChange,
-  ...inputs
-}) => {
+const Feedback = styled.div`
+  display: flex !important;
+  align-items: center;
+`;
+const RegisterPresenter = ({ handleSubmit, handleChange, ...inputs }) => {
   return (
     <Container>
-      {console.log(inputs)}
+      {console.log(inputs.errors)}
       <JoinBox>
         <Hbox>
           <Hlink to="/">SELF</Hlink>
         </Hbox>
         <Form onSubmit={handleSubmit}>
-          <div>
+          <div className="form-group">
             <Name
+              className={
+                inputs.errors.name ? "form-control is-invalid" : "form-control"
+              }
               type="text"
               name="name"
               placeholder="NAME"
               id="name"
               onChange={handleChange}
             />
+            {inputs.errors.name && (
+              <Feedback className="invalid-feedback">
+                {inputs.errors.name}
+              </Feedback>
+            )}
           </div>
           <div>
             <Email
+              className={
+                inputs.errors.email ? "form-control is-invalid" : "form-control"
+              }
               type="email"
               name="email"
               placeholder="E-mail"
               id="email"
               onChange={handleChange}
             />
+            {inputs.errors.email && (
+              <Feedback className="invalid-feedback">
+                {inputs.errors.email}
+              </Feedback>
+            )}
           </div>
           <div>
             <Password
+              className={
+                inputs.errors.password
+                  ? "form-control is-invalid"
+                  : "form-control"
+              }
               type="password"
               name="password"
               placeholder="PASSWORD"
               id="password"
               onChange={handleChange}
             />
+            {inputs.errors.password && (
+              <Feedback className="invalid-feedback">
+                {inputs.errors.password}
+              </Feedback>
+            )}
           </div>
           <div>
             <Password
+              className={
+                inputs.errors.confirmPassword
+                  ? "form-control is-invalid"
+                  : "form-control"
+              }
               type="password"
               name="confirmPassword"
               placeholder="PASSWORD_CONFIRMATION"
               id="confirmPassword"
               onChange={handleChange}
             />
+            {inputs.errors.confirmPassword && (
+              <Feedback className="invalid-feedback">
+                {inputs.errors.confirmPassword}
+              </Feedback>
+            )}
           </div>
 
           <Submit type="submit" value="등록" onClick={handleSubmit} />

@@ -27,7 +27,11 @@ export const login = (req, res) => {
           {
             _id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            amount: user.amount,
+            income: user.income,
+            expense: user.expense,
+            transactions: user.transactions
           },
           "secret",
           { expiresIn: "2h" }
@@ -63,7 +67,11 @@ export const register = (req, res) => {
             let newUser = new User({
               name,
               email,
-              password: hash
+              password: hash,
+              balance: 0,
+              expense: 0,
+              income: 0,
+              transactions: []
             });
             newUser
               .save()

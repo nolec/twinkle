@@ -4,8 +4,9 @@ import reset from "styled-reset";
 const globalStyles = createGlobalStyle`
  ${reset};
     a{
-        text-decoration:none;
-        color:inherit;
+        text-decoration:none !important;
+        color:inherit !important;
+
     }
     *{
         margin: 0;

@@ -55,7 +55,23 @@ const Form = styled.form`
 `;
 const Email = styled.input``;
 const Password = styled.input``;
-const Submit = styled.input``;
+const Submit = styled.input`
+  float: left;
+  all: unset;
+  height: 30px;
+  cursor: pointer;
+`;
+const Signup = styled(Link)`
+  width: 70px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+`;
+const Feedback = styled.div`
+  display: flex !important;
+  align-items: center;
+`;
 
 const LoginPresenter = ({ handleSubmit, handleChange, ...inputs }) => {
   return (
@@ -67,6 +83,9 @@ const LoginPresenter = ({ handleSubmit, handleChange, ...inputs }) => {
         <Form onSubmit={handleSubmit}>
           <div>
             <Email
+              className={
+                inputs.errors.email ? "form-control is-invalid" : "form-control"
+              }
               type="email"
               name="email"
               placeholder="E-mail"
@@ -74,9 +93,19 @@ const LoginPresenter = ({ handleSubmit, handleChange, ...inputs }) => {
               value={inputs.email}
               onChange={handleChange}
             />
+            {inputs.errors.email && (
+              <Feedback className="invalid-feedback">
+                {inputs.errors.email}
+              </Feedback>
+            )}
           </div>
           <div>
             <Password
+              className={
+                inputs.errors.password
+                  ? "form-control is-invalid"
+                  : "form-control"
+              }
               type="password"
               name="password"
               placeholder="PASSWORD"
@@ -84,9 +113,16 @@ const LoginPresenter = ({ handleSubmit, handleChange, ...inputs }) => {
               value={inputs.password}
               onChange={handleChange}
             />
+            {inputs.errors.password && (
+              <Feedback className="invalid-feedback">
+                {inputs.errors.password}
+              </Feedback>
+            )}
           </div>
           <Submit type="submit" value="로그인" onClick={handleSubmit} />
+          <Signup to="/register">회원등록</Signup>
         </Form>
+        <Feedback>{inputs.errors.message}</Feedback>
       </LoginBox>
     </Container>
   );

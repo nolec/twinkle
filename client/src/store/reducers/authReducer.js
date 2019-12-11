@@ -10,8 +10,8 @@ const authReducer = (state = init, action) => {
   switch (action.type) {
     case Types.SET_USER: {
       return {
-        isAuthenticated: Object.keys(action.payload.user).length === 0,
         user: action.payload.user,
+        isAuthenticated: Object.keys(action.payload.user).length !== 0,
         error: {}
       };
     }

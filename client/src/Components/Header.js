@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
+import { logout } from "../store/actions/authActions";
 
-const Header = styled.header``;
+const HeaderH = styled.header``;
 const ListSection = styled.section`
   display: flex;
   font-size: 22px;
@@ -31,6 +33,9 @@ const AuthBox = styled.div`
   }
 `;
 const LoginBtn = styled(Link)``;
+const LogoutBtn = styled.button`
+  all: unset;
+`;
 const JoinBtn = styled(Link)``;
 
 const List = styled.ul`
@@ -55,20 +60,35 @@ const Slink = styled(Link)`
   width: 100%;
   height: 100%;
 `;
-
-export default withRouter(({ location: { pathname }, history }) => {
+const Header = props => {
+  const Selector = useSelector(state => state);
+  const dispatch = useDispatch();
+  console.log(Selector);
   return (
-    <Header>
+    <HeaderH>
       <IntroSection>
         <IntroText>Show Me Your Talent</IntroText>
         <AuthBox>
-          <LoginBtn to="/login">로그인</LoginBtn>
-          <JoinBtn to="/register">회원가입</JoinBtn>
+          {console.log(props)}
+          {Selector && Selector.auth.isAuthenticated ? (
+            <LogoutBtn
+              onClick={() => {
+                dispatch(logout(props.history));
+              }}
+            >
+              로그아웃
+            </LogoutBtn>
+          ) : (
+            <>
+              <LoginBtn to="/login">로그인</LoginBtn>
+              <JoinBtn to="/register">회원가입</JoinBtn>
+            </>
+          )}
         </AuthBox>
       </IntroSection>
       <ListSection>
         <List>
-          <Item current={pathname === "/"}>
+          <Item current={props.location.pathname === "/"}>
             <Slink to="/">자랑툰</Slink>
           </Item>
           <Item>
@@ -79,6 +99,7 @@ export default withRouter(({ location: { pathname }, history }) => {
           </Item>
         </List>
       </ListSection>
-    </Header>
+    </HeaderH>
   );
-});
+};
+export default withRouter(Header);

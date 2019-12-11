@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { register } from "../../store/actions/authActions";
 import RegisterPresenter from "./registerPresenter";
 
@@ -11,38 +11,49 @@ const useRegister = props => {
     confirmPassword: "",
     errors: {}
   });
-
+  const Selector = useSelector(state => state);
+  const dispatch = useDispatch();
   const handleSubmit = event => {
     event.preventDefault();
     let { name, email, password, confirmPassword } = inputs;
-    props.register({
-      name,
-      email,
-      password,
-      confirmPassword
-    });
+    dispatch(
+      register(
+        {
+          name,
+          email,
+          password,
+          confirmPassword
+        },
+        props.history
+      )
+    );
+    authError();
   };
   const handleChange = event => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
   };
+
+  const authError = Error => {
+    if (Error && Object.keys(Error).length > 0) {
+      setInputs({ ...inputs, errors: Error });
+    }
+  };
+  useEffect(() => {
+    authError(Selector.auth.error);
+  }, [Selector.auth]);
+
   return { ...inputs, handleChange, handleSubmit };
 };
 
 const RegisterContainer = props => {
-  const validError = props.auth.error;
   const { handleChange, handleSubmit, ...inputs } = useRegister(props);
   return (
     <RegisterPresenter
-      validError={validError}
       {...inputs}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
     />
   );
 };
-const mapStateToProps = state => {
-  console.log(state);
-  return { auth: state.auth };
-};
 
-export default connect(mapStateToProps, { register })(RegisterContainer);
+export default RegisterContainer;
